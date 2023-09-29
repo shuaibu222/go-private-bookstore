@@ -1,0 +1,6 @@
+*.txt
+*.jpg
+*.pdf
+.env
+.DS_Store
+.dockerignore
