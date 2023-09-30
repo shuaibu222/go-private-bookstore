@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy go.mod, go.sum. Whith go.mod no need of go get -d -v
 COPY go.mod . 
 COPY go.sum .
-COPY .env /app/.env
+COPY .env /app/
 
 # Just download from go.mod not install
 RUN go mod download
