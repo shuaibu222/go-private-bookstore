@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -10,8 +11,9 @@ import (
 var myDb *gorm.DB
 
 func Connect() {
+	LoadEnv()
 
-	dsn := "shuaibu:Shuaibu%12345%@tcp(localhost:3306)/online_books?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := os.Getenv("DATABASE_URL")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("Error while connecting to the database: ", err)
