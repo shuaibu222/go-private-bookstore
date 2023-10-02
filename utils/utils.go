@@ -61,25 +61,3 @@ func JwtUserIdUsername(w http.ResponseWriter, r *http.Request) (string, string) 
 
 	return id, userName
 }
-
-// func getContentType(fileType string) string {
-// 	switch fileType {
-// 	case "pdf":
-// 		return "application/pdf"
-// 	case "txt":
-// 		return "text/plain"
-// 	default:
-// 		return "text/plain" // Default content type if not recognized
-// 	}
-// }
-
-// func getUserContentType(fileType string) string {
-// 	switch fileType {
-// 	case "jpg":
-// 		return "image/jpg"
-// 	case "png":
-// 		return "image/png"
-// 	default:
-// 		return "image/jpg"
-// 	}
-// }

@@ -58,6 +58,7 @@ func CreateNewBook(w http.ResponseWriter, r *http.Request) {
 
 	go func() {
 		defer uploadWg.Done()
+		// You can at least upload a book even if you don't upload a book cover
 		if path.Ext(CreateBook.UploadedBook) != ".pdf" && path.Ext(CreateBook.UploadedBook) != ".txt" {
 			json.NewEncoder(w).Encode("You must at least upload a book file")
 			return

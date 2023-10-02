@@ -30,7 +30,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	users := models.GetAllUsers()
 
-	// user can only be created once
+	// user can only be created once no duplicate
 	for _, user := range users {
 		if user.Email == userProfile.Email && user.Username == userProfile.Username {
 			w.WriteHeader(http.StatusConflict)
@@ -63,7 +63,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+func GetAllUsers(w http.ResponseWriter, r *http.Request) { // for development purposes
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
