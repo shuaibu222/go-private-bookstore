@@ -140,9 +140,10 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 	// set the new token as the users token
 	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  expirationTime,
+		HttpOnly: true,
 	})
 }
 

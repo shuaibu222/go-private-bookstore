@@ -197,7 +197,11 @@ func DeleteFromS3(filepath string, key string) error {
 
 	svc, _ := config.AwsS3Config()
 
-	_, err := svc.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(linkKey)})
+	_, err := svc.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(linkKey),
+	})
+
 	if err != nil {
 		return err
 	}
