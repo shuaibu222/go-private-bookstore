@@ -21,7 +21,7 @@ func main() {
 	log.Fatal(http.ListenAndServe("localhost:9000",
 		handlers.CORS(
 			handlers.AllowCredentials(),
-			handlers.AllowedOrigins([]string{"http://localhost:3000"}),
+			handlers.AllowedOrigins([]string{"http://*", "https://*"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 			handlers.AllowedHeaders([]string{"*"}),
 		)(r)),
