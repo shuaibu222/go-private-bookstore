@@ -78,9 +78,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.SetCookie(w, &http.Cookie{
-			Name:    "token",
-			Value:   tokenString,
-			Expires: expirationTime,
+			Name:     "token",
+			Value:    tokenString,
+			Expires:  expirationTime,
+			HttpOnly: true,
 		})
 
 		w.Header().Set("Content-Type", "application/json")
