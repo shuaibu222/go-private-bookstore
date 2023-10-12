@@ -1,10 +1,30 @@
-version: '3.4'
+version: "3"
 
 services:
-  gobookstore:
-    image: gobookstore
+
+  bookstore:
+    image: bookstore
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
+    env_file:
+      - ./bookstore.env
     ports:
-      - 9000:9000
+      - "9000:7000"
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5000:5432"
+    restart: always
+    env_file:
+      - ./bookstore.env
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - postgres:/var/lib/postgresql/data/
+
+volumes:
+  postgres:

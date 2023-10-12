@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -16,9 +17,11 @@ func main() {
 	routes.BooksRoutes(r)
 	routes.UsersRoutes(r)
 	http.Handle("/", r)
-	fmt.Println("Server started at http://localhost:9000 ......")
+	fmt.Println("Server started.........")
 
-	log.Fatal(http.ListenAndServe("localhost:9000",
+	port := os.Getenv("WEB_PORT")
+
+	log.Fatal(http.ListenAndServe("localhost:"+port,
 		handlers.CORS(
 			handlers.AllowCredentials(),
 			handlers.AllowedOrigins([]string{"http://*", "https://*"}),
