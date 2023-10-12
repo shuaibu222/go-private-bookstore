@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -28,14 +27,13 @@ type Claims struct {
 var jwtSecretKey []byte
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	config.LoadEnv()
 
-	secret := os.Getenv("SECRET_JWT_KEY")
-	if secret == "" {
-		log.Fatal("Secret key not set")
+	config, err := config.LoadConfig()
+	if err != nil {
+		log.Println("Error while loading envs: ", err)
 	}
 
-	jwtSecretKey = []byte(secret)
+	jwtSecretKey = []byte(config.JWTSecret)
 
 	var cred LoginCredentials
 	var user models.UserProfile

@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/shuaibu222/go-bookstore/auth"
@@ -23,14 +22,12 @@ func ParseBody(r *http.Request, x interface{}) {
 }
 
 func JwtUserIdUsername(w http.ResponseWriter, r *http.Request) (string, string) {
-	config.LoadEnv()
-
-	secret := os.Getenv("SECRET_JWT_KEY")
-	if secret == "" {
-		log.Fatal("Secret key not set")
+	config, err := config.LoadConfig()
+	if err != nil {
+		log.Println("Error while loading envs: ", err)
 	}
 
-	jwtSecretKey = []byte(secret)
+	jwtSecretKey = []byte(config.JWTSecret)
 	c, err := r.Cookie("token")
 	if err != nil {
 		if err == http.ErrNoCookie {

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/shuaibu222/go-bookstore/api/routes"
+	config "github.com/shuaibu222/go-bookstore/config"
 )
 
 func main() {
@@ -19,9 +19,12 @@ func main() {
 	http.Handle("/", r)
 	fmt.Println("Server started.........")
 
-	port := os.Getenv("WEB_PORT")
+	config, err := config.LoadConfig()
+	if err != nil {
+		log.Println("Error while loading envs: ", err)
+	}
 
-	log.Fatal(http.ListenAndServe("localhost:"+port,
+	log.Fatal(http.ListenAndServe("localhost:"+config.WebPort,
 		handlers.CORS(
 			handlers.AllowCredentials(),
 			handlers.AllowedOrigins([]string{"http://*", "https://*"}),

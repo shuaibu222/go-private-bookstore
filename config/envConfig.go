@@ -2,21 +2,34 @@ package config
 
 import (
 	"log"
-	"os"
-	"regexp"
 
-	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
-var projectDirName = "go-bookstore"
+type Config struct {
+	DBHost         string `mapstructure:"POSTGRES_HOST"`
+	DBUserName     string `mapstructure:"POSTGRES_USER"`
+	DBUserPassword string `mapstructure:"POSTGRES_PASSWORD"`
+	DBName         string `mapstructure:"POSTGRES_DB"`
+	DBPort         string `mapstructure:"POSTGRES_PORT"`
 
-func LoadEnv() {
-	projectName := regexp.MustCompile(`^(.*` + projectDirName + `)`) // Create a regular expression to match the project directory name
-	currentWorkDirectory, _ := os.Getwd()                            // Get the current working directory and assign it to the currentWorkDirectory variable
-	rootPath := projectName.Find([]byte(currentWorkDirectory))       // Use the regular expression to find the project directory in the current working directory
-	err := godotenv.Load(string(rootPath) + `/.env`)                 // Load the .env file from the rootPath
+	WebPort   string `mapstructure:"WEB_PORT"`
+	JWTSecret string `mapstructure:"JWT_SECRET"`
+}
 
+func LoadConfig() (*Config, error) {
+	env := Config{}
+	viper.SetConfigFile(".env")
+
+	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatalf("Error loading .env file") // Log a fatal error message and exit the program
+		log.Fatal("Can't find the file .env : ", err)
 	}
+
+	err = viper.Unmarshal(&env)
+	if err != nil {
+		log.Fatal("Environment can't be loaded: ", err)
+	}
+
+	return &env, nil
 }
