@@ -1,10 +1,11 @@
+bookstoreApp
+
 *.txt
 *.jpg
 *.pdf
 *.env
 .DS_Store
 .dockerignore
-bookstoreApp
 
 # Binaries for programs and plugins
 *.exe
