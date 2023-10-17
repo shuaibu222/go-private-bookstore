@@ -39,13 +39,20 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	path := userProfile.UploadedProfileImage
+	// get the user profile image from the request
+	profile, profile_header, err := r.FormFile("uploaded_profile_image")
+	if err != nil {
+		log.Println("Error uploading file: ", err)
+	}
 
-	url := utils.UploadUserImage(path)
+	defer profile.Close()
+
+	url := utils.UploadUserImage(profile_header.Filename)
 
 	// updating this anonymous function with the new profile image url
 	userProfile.AvatarURL = url
 
+	// hash the user entered password for security purposes
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userProfile.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("Error generating password: ", err)
@@ -220,7 +227,7 @@ func DeleteProfileImageFromS3(w http.ResponseWriter, r *http.Request) {
 
 	// Delete the profile image from S3 (if it exists)
 	if user.AvatarURL != "" {
-		err := utils.DeleteFromS3(user.UploadedProfileImage, user.AvatarURL)
+		err := utils.DeleteFromS3(user.AvatarURL)
 		if err != nil {
 			log.Println("Error deleting from S3:", err)
 			w.WriteHeader(http.StatusInternalServerError)

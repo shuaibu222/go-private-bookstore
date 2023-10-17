@@ -29,6 +29,24 @@ func CreateNewBook(w http.ResponseWriter, r *http.Request) {
 	CreateBook.User.UserId = id
 	CreateBook.User.Username = userName
 
+	// Parse the file from the request
+	book, book_header, err := r.FormFile("uploaded_book")
+	if err != nil {
+		log.Println("Error uploading book: ", err)
+		http.Error(w, "Failed to read book from request", http.StatusBadRequest)
+		return
+	}
+
+	cover, cover_header, err := r.FormFile("uploaded_cover_image")
+	if err != nil {
+		log.Println("Error uploading cover image: ", err)
+		http.Error(w, "Failed to read cover image from request", http.StatusBadRequest)
+		return
+	}
+
+	defer book.Close()
+	defer cover.Close()
+
 	// parse the book instance
 	json.NewDecoder(r.Body).Decode(&CreateBook)
 
@@ -53,7 +71,7 @@ func CreateNewBook(w http.ResponseWriter, r *http.Request) {
 
 	go func() {
 		defer uploadWg.Done()
-		utils.UploadBook(CreateBook.UploadedBook, resultChan)
+		utils.UploadBook(book_header.Filename, resultChan)
 	}()
 
 	go func() {
@@ -63,7 +81,7 @@ func CreateNewBook(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode("You must at least upload a book file")
 			return
 		} else if path.Ext(CreateBook.UploadedBook) == ".pdf" || path.Ext(CreateBook.UploadedBook) == ".txt" {
-			utils.UploadCoverImage(CreateBook.UploadedCoverImage, resultChan)
+			utils.UploadCoverImage(cover_header.Filename, resultChan)
 		}
 	}()
 
@@ -238,7 +256,7 @@ func DeleteCoverFromS3(w http.ResponseWriter, r *http.Request) {
 
 	// Delete the profile image from S3 (if it exists)
 	if book.UploadedCoverImage != "" {
-		err := utils.DeleteFromS3(book.UploadedCoverImage, book.CoverImageUrl)
+		err := utils.DeleteFromS3(book.CoverImageUrl)
 		if err != nil {
 			log.Println("Error deleting from S3:", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -276,7 +294,7 @@ func DeleteBookFromS3(w http.ResponseWriter, r *http.Request) {
 
 	// Delete the profile image from S3 (if it exists)
 	if book.UploadedBook != "" {
-		err := utils.DeleteFromS3(book.UploadedBook, book.FileURL)
+		err := utils.DeleteFromS3(book.FileURL)
 		if err != nil {
 			log.Println("Error deleting from S3:", err)
 			w.WriteHeader(http.StatusInternalServerError)

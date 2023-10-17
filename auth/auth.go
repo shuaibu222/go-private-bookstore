@@ -82,9 +82,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			HttpOnly: true,
 		})
 
-		w.Header().Set("Content-Type", "application/json")
-		tkn, _ := json.Marshal(tokenString)
-		w.Write(tkn)
+		// w.Header().Set("Content-Type", "application/json")
+		// tkn, _ := json.Marshal(tokenString)
+		// w.Write(tkn)
 	}
 
 }

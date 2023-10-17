@@ -62,7 +62,7 @@ func UploadBook(filepath string, resultChan chan<- string) {
 	})
 
 	if err != nil {
-		fmt.Println("Error uploading file:", err)
+		log.Println("Error uploading file:", err)
 		return
 	}
 
@@ -123,7 +123,7 @@ func UploadCoverImage(filepath string, resultChan chan<- string) {
 	})
 
 	if err != nil {
-		fmt.Println("Error uploading file:", err)
+		log.Println("Error uploading file:", err)
 		return
 	}
 
@@ -176,10 +176,10 @@ func UploadUserImage(filepath string) string {
 			Body:   bytes.NewReader(buf.Bytes()),
 		})
 		if err != nil {
-			fmt.Println("Error uploading file:", err)
+			log.Println("Error uploading file:", err)
 		}
 
-		fmt.Println("File uploaded successfully!!!")
+		log.Println("File uploaded successfully!!!")
 
 		// Generate the S3 file link based on your S3 bucket and key
 		userLinkCreated = fmt.Sprintf("https://%s.%s.s3.amazonaws.com/%s", bucket, Region, key)
@@ -190,7 +190,7 @@ func UploadUserImage(filepath string) string {
 }
 
 // make it to be a controller for deleting an object
-func DeleteFromS3(filepath string, key string) error {
+func DeleteFromS3(key string) error {
 	linkKey := key
 
 	bucket := "onlinebooks"

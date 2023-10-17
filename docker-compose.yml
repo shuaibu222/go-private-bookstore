@@ -2,42 +2,43 @@ version: "3"
 
 services:
 
-  postgres:
+  bookstore_db:
+    container_name: bookstore_db
     image: "postgres"
     ports:
-      - "5430:5432"
-    restart: always
+      - "5432:5432"
     deploy:
       mode: replicated
       replicas: 1
     # environment:
-    #   - POSTGRES_HOST=${POSTGRES_HOST}
-    #   - POSTGRES_PORT=${POSTGRES_PORT}
-    #   - POSTGRES_USER=${POSTGRES_USER}
-    #   - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    #   - POSTGRES_DB=${POSTGRES_DB}
-    env_file:
-      - .env
+    #   POSTGRES_USER: ${POSTGRES_USER}
+    #   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    #   POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres:/var/lib/postgresql/data/
+    env_file:
+      - .env
 
-  # bookstore:
-  #   build:
-  #     context: ./
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   ports:
-  #     - "9000:7000"
-  #   depends_on:
-  #     - postgres
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #   environment: 
-  #     - JWT_SECRET=${JWT_SECRET}
-  #     - WEB_PORT=${WEB_PORT}
-  #   env_file:
-  #     - .env
+
+  bookstore:
+    container_name: bookstore
+    image: shuaibu12345/go-bookstore:1.0.0
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - bookstore_db
+    deploy:
+      mode: replicated
+      replicas: 1
+    # environment: 
+    #   WEB_PORT: ${WEB_PORT}
+    #   DB_PORT: ${DB_PORT}
+    #   DB_USER: ${DB_USER}
+    #   DB_PASSWORD: ${DB_PASSWORD}
+    #   DB_NAME: ${DB_NAME}
+    env_file:
+      - .env
 
 volumes:
-  postgres:
+  postgres: {}
