@@ -111,7 +111,11 @@ func CreateNewBook(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// create a new book instance
 		book := CreateBook.CreateBook()
-		res, _ := json.Marshal(book)
+		res, err := json.Marshal(book)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		w.Write(res)
 
 	}
@@ -126,8 +130,13 @@ func GetAllUserBooks(w http.ResponseWriter, r *http.Request) {
 
 	books := models.GetAllBooks(id)
 
-	res, _ := json.Marshal(books)
+	res, err := json.Marshal(books)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	w.Write(res)
+
 }
 
 func GetAllPublicBooks(w http.ResponseWriter, r *http.Request) {
@@ -136,8 +145,13 @@ func GetAllPublicBooks(w http.ResponseWriter, r *http.Request) {
 
 	books := models.GetPublicBooks()
 
-	res, _ := json.Marshal(books)
+	res, err := json.Marshal(books)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	w.Write(res)
+
 }
 
 func GetBookById(w http.ResponseWriter, r *http.Request) {

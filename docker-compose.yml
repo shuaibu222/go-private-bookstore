@@ -10,10 +10,6 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-    # environment:
-    #   POSTGRES_USER: ${POSTGRES_USER}
-    #   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    #   POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres:/var/lib/postgresql/data/
     env_file:
@@ -31,12 +27,6 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-    # environment: 
-    #   WEB_PORT: ${WEB_PORT}
-    #   DB_PORT: ${DB_PORT}
-    #   DB_USER: ${DB_USER}
-    #   DB_PASSWORD: ${DB_PASSWORD}
-    #   DB_NAME: ${DB_NAME}
     env_file:
       - .env
 

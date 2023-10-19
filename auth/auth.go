@@ -24,9 +24,14 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+type Cookie struct {
+	Name string `json:"cookie"`
+}
+
 var jwtSecretKey []byte
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 
 	config, err := config.LoadConfig()
 	if err != nil {
@@ -48,7 +53,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(enteredPassword))
 		if err != nil {
 			log.Println("Failed to compare: ", err)
-			json.NewEncoder(w).Encode("You entered wrong password!. Please try again")
+			http.Error(w, "You entered the wrong password!. Please try again", http.StatusUnauthorized)
 			return
 		}
 
@@ -82,9 +87,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			HttpOnly: true,
 		})
 
-		// w.Header().Set("Content-Type", "application/json")
-		// tkn, _ := json.Marshal(tokenString)
-		// w.Write(tkn)
+		cok := Cookie{
+			Name: tokenString,
+		}
+
+		tkn, _ := json.Marshal(cok)
+		w.Write(tkn)
 	}
 
 }
