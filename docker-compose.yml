@@ -11,7 +11,7 @@ services:
       mode: replicated
       replicas: 1
     volumes:
-      - ./postgres/:/var/lib/postgresql/data/
+      - ./postgres-data/:/var/lib/postgresql/data/
     env_file:
       - .env
 
@@ -29,6 +29,3 @@ services:
       replicas: 1
     env_file:
       - .env
-
-volumes:
-  postgres:
