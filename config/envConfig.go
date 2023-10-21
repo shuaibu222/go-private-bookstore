@@ -15,6 +15,9 @@ type Config struct {
 
 	WebPort   string `mapstructure:"WEB_PORT"`
 	JWTSecret string `mapstructure:"JWT_SECRET"`
+
+	Secret string `mapstructure:"SECRET_KEY"`
+	Access string `mapstructure:"ACCESS_KEY"`
 }
 
 func LoadConfig() (*Config, error) {

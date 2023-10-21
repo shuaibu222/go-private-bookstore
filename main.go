@@ -21,16 +21,15 @@ func main() {
 	if err != nil {
 		log.Println("Error while loading envs: ", err)
 	}
-	// , "https://*"
+
+	log.Println("Server started.........")
 
 	log.Fatal(http.ListenAndServe(":"+config.WebPort,
 		handlers.CORS(
 			handlers.AllowCredentials(),
-			handlers.AllowedOrigins([]string{"http://localhost:3000"}),
+			handlers.AllowedOrigins([]string{"http://*, https://*"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 			handlers.AllowedHeaders([]string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"}),
 		)(r)),
 	)
-
-	log.Println("Server started.........")
 }

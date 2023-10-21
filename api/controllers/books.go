@@ -218,7 +218,7 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 			bookDetails.Genre = updateBook.UploadedCoverImage
 		}
 
-		if err := db.Save(&bookDetails).Error; err != nil {
+		if err := db.Table("books").Save(&bookDetails).Error; err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Fatal("Error updating book: ", err)
 		}
@@ -281,7 +281,7 @@ func DeleteCoverFromS3(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update the user profile in the database
-	if err := db.Save(&book).Error; err != nil {
+	if err := db.Table("books").Save(&book).Error; err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Fatal("Error updating user: ", err)
 		return
@@ -289,6 +289,8 @@ func DeleteCoverFromS3(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("Cover image deleted successfully"))
 }
+
+////////////////  TODO IN SHA ALLAH ISSUE OF UPDATE ERROR
 
 func DeleteBookFromS3(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -319,7 +321,7 @@ func DeleteBookFromS3(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update the user profile in the database
-	if err := db.Save(&book).Error; err != nil {
+	if err := db.Table("books").Save(&book).Error; err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Fatal("Error updating user: ", err)
 		return
